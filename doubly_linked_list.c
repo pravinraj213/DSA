@@ -8,21 +8,25 @@ struct Node {
 
 struct Node* head = NULL;
 
-void insertAtBeginning(int data) {
+// Create a new node
+struct Node* createNode(int data) {
     struct Node* newNode = malloc(sizeof(struct Node));
     newNode->data = data;
     newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertAtBeginning(int data) {
+    struct Node* newNode = createNode(data);
     newNode->next = head;
     if (head) head->prev = newNode;
     head = newNode;
 }
 
 void insertAtEnd(int data) {
-    struct Node* newNode = malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->next = NULL;
+    struct Node* newNode = createNode(data);
     if (!head) {
-        newNode->prev = NULL;
         head = newNode;
         return;
     }
@@ -41,8 +45,7 @@ void insertAtPosition(int data, int pos) {
     for (int i = 1; i < pos - 1 && temp != NULL; i++)
         temp = temp->next;
     if (temp == NULL) return;
-    struct Node* newNode = malloc(sizeof(struct Node));
-    newNode->data = data;
+    struct Node* newNode = createNode(data);
     newNode->next = temp->next;
     newNode->prev = temp;
     if (temp->next)
@@ -96,20 +99,28 @@ void displayForward() {
 }
 
 int main() {
+    // Insert 10 at beginning: List = 10
     insertAtBeginning(10);
+    // Insert 20 at end: List = 10 <-> 20
     insertAtEnd(20);
-    insertAtPosition(15, 2);  // List: 10 <-> 15 <-> 20
+    // Insert 15 at position 2: List = 10 <-> 15 <-> 20
+    insertAtPosition(15, 2);
     printf("List after insertions:\n");
-    displayForward();
+    displayForward();  // Output: 10 <-> 15 <-> 20 <-> NULL
 
-    deleteFromBeginning();    // List: 15 <-> 20
-    deleteFromEnd();          // List: 15
+    // Delete from beginning: removes 10, List = 15 <-> 20
+    deleteFromBeginning();
+    // Delete from end: removes 20, List = 15
+    deleteFromEnd();
+    // Insert 25 at end: List = 15 <-> 25
     insertAtEnd(25);
-    insertAtEnd(30);          // List: 15 <-> 25 <-> 30
-    deleteFromPosition(2);    // Delete node with data 25; List: 15 <-> 30
+    // Insert 30 at end: List = 15 <-> 25 <-> 30
+    insertAtEnd(30);
+    // Delete node at position 2: removes 25, List = 15 <-> 30
+    deleteFromPosition(2);
 
     printf("List after deletions:\n");
-    displayForward();
+    displayForward();  // Output: 15 <-> 30 <-> NULL
 
     return 0;
 }
